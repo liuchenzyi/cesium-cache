@@ -1,0 +1,19 @@
+html,
+body {
+    margin: 0;
+    display: flex;
+    place-items: center;
+    min-width: 320px;
+    min-height: 100vh;
+}
+
+
+#map {
+    width: 80vw;
+    height: 80vh;
+}
+
+.cesium-viewer{
+    width: 100%;
+    height: 100%;
+}
