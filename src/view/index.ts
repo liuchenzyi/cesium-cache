@@ -17,7 +17,6 @@ const TDT_YX = (token: string) => new WebMapTileServiceImageryProvider({
 
 export const init = async () => {
 
-    console.log(Cesium)
     // console.log(Cesium)
     let viewer: Cesium.Viewer = new Cesium.Viewer("map", {
         // infoBox: true, // 禁用沙箱，解决控制台报错
@@ -30,11 +29,13 @@ export const init = async () => {
         baseLayerPicker: false, // 底图组件，选择三维数字地球的底图（imagery and terrain）。
         navigationHelpButton: false, // 帮助按钮
         fullscreenButton: false, // 全屏按钮
-        scene3DOnly: true, // 每个几何实例将只能以 3D 渲染以节省 GPU 内存
+        // scene3DOnly: true, // 每个几何实例将只能以 3D 渲染以节省 GPU 内存
         sceneMode: 3, // 初始场景模式 1 2D模式 2 2D循环模式 3 3D模式  Cesium.SceneMode
         // imageryProvider:
 
     })
+	// http://10.126.126.3:5173/
+	// http://192.168.1.101:8221/gateway-service//fileStatic/3dmap/yitai/tileset.json
 
 
 
@@ -44,6 +45,14 @@ export const init = async () => {
     viewer.scene.backgroundColor = new Cesium.Color(0, 0, 0, 0);
 
     viewer.imageryLayers.addImageryProvider(TDT_YX('012dcb4d2ede55a5e37bd5b34f6aca40'))
+
+	const tileSet = await Cesium.Cesium3DTileset.fromUrl("http://10.126.126.3:5173/gateway-service//fileStatic/3dmap/yitai/tileset.json")
+
+	viewer.scene.primitives.add(tileSet)
+
+	console.log(tileSet)
+
+	viewer.zoomTo(tileSet, new Cesium.HeadingPitchRange(-0.5, -0.5, 800))
 
 // // 设置中心点经纬度
 //

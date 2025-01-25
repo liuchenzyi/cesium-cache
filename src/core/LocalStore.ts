@@ -3,7 +3,7 @@ import Dexie, {type EntityTable} from 'dexie';
 
 interface Cache {
     url: string;
-    value: any;
+    value: Blob | ArrayBuffer | null;
 }
 
 const db = new Dexie('LocalStore') as Dexie & {
@@ -15,12 +15,12 @@ db.version(1).stores({
 
 // 通过 url 获取数据
 const getCacheByUrl = async (url: string) => {
-    const {value} = await db.cache.get(url) || {}
+	const {value} = await db.cache.where({url}).first() || {value: null}
     return value
 }
 
 // 将数据 存储到数据库中
-const setCacheToLocal = async (url: string, value: any) => {
+const setCacheToLocal = async (url: string, value: Blob | ArrayBuffer) => {
     await db.cache.put({value, url})
 }
 
