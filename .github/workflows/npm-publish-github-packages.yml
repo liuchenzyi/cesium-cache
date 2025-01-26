@@ -18,7 +18,6 @@ jobs:
     permissions:
       contents: read
       packages: write
-      secrets: read
     steps:
       - uses: actions/checkout@v4
       - name: Setup pnpm
