@@ -18,6 +18,7 @@ jobs:
     permissions:
       contents: read
       packages: write
+      secrets: read
     steps:
       - uses: actions/checkout@v4
       - name: Setup pnpm
@@ -29,12 +30,10 @@ jobs:
           node-version: 20
           cache: pnpm
           registry-url: https://npm.pkg.github.com/
+      - name: Verify NPM_TOKEN
+        run: echo "NPM_TOKEN is set"
       - name: Install Dependency
         run: pnpm install
-      - name: Install Dependency
-        run: echo ${{ secrets.NPM_PUBLISH }}
-      - name: Install Dependency
-        run: echo ${{ secrets.NPM }}
       - name: Build
         run: pnpm run build
       - run: pnpm publish
