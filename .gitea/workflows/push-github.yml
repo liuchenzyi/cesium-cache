@@ -1,0 +1,41 @@
+# 构建 VitePress 站点并将其部署到 GitHub Pages 的示例工作流程
+#
+name: Push to GitHub
+
+on:
+  # 在针对 `main` 分支的推送上运行。如果你
+  push:
+    branches: [ main ]
+
+  # 允许你从 Actions 选项卡手动运行此工作流程
+  workflow_dispatch:
+
+
+# 只允许同时进行一次部署，跳过正在运行和最新队列之间的运行队列
+# 但是，不要取消正在进行的运行，因为我们希望允许这些生产部署完成
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  # 构建工作
+  clone:
+    runs-on: windows-server
+    steps:
+      - name: Checkout
+        uses: https://gitee.com/mirror-actions/checkout@v4
+        with:
+          fetch-depth: 0 # 是否获取所有提交
+      - run: echo "${{ gitea.repository }} had clone to runner "
+      - name: reset remote
+        run: |
+          git remote set-url origin git@github.com:liuchenzyi/cesium-cache.git
+        shell: powershell
+      - name: pull from github
+        run: |
+          git pull
+        shell: powershell
+      - name: push to github
+        run: |
+          git push origin main
+        shell: powershell
