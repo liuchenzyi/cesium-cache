@@ -1,6 +1,6 @@
 import './style.css'
 
-import {useCesiumCache} from './cache/Cache.ts'
+import {useCesiumCache} from 'cesium-cache'
 
 useCesiumCache()
 
