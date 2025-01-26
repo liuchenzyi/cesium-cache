@@ -16,12 +16,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9 # 指定 pnpm 版本，可以根据需要调整
       - uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: pnpm
           registry-url: https://npm.pkg.github.com/
-      - run: npm install
-      - run: npm run build
-      - run: npm publish
+      - run: pnpm install
+      - run: pnpm run build
+      - run: pnpm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_publish}}
