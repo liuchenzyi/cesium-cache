@@ -31,6 +31,7 @@ jobs:
         run: pnpm install
       - name: Build
         run: pnpm run build
+      - run: echo "${{ vars.NPM_PUBLISH }}"
       - run: pnpm publish
         env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_PUBLISH}}
+          NODE_AUTH_TOKEN: ${{vars.NPM_PUBLISH}}
