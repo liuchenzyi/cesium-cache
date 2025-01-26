@@ -14,6 +14,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
     steps:
       - uses: actions/checkout@v4
       - name: Setup pnpm
@@ -27,6 +30,7 @@ jobs:
           registry-url: https://npm.pkg.github.com/
       - run: pnpm install
       - run: pnpm run build
+      - run: pnpm version patch
       - run: pnpm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_PUBLISH}}

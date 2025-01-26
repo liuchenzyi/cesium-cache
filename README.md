@@ -9,8 +9,8 @@ Cesium 缓存
 
 依赖库
 
-- [`dexie`]
-- [`cesium`]
+- `dexie`
+- `cesium`
 
 ## 安装
 
