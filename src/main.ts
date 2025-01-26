@@ -1,8 +1,8 @@
 import './style.css'
 
-import {useBlobCache} from './core/Cache.ts'
+import {useCesiumCache} from './cache/Cache.ts'
 
-useBlobCache()
+useCesiumCache()
 
 import {init} from "./view";
 
