@@ -1,9 +1,7 @@
 import { defineConfig } from 'vite'
-// import cesium from 'vite-plugin-cesium'
 import dts from 'vite-plugin-dts'
 
 
-// https://vite.dev/config/
 export default defineConfig({
     plugins: [
         // cesium(),
