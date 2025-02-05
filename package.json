@@ -7,7 +7,8 @@
 	"types": "./dist/types/chche.d.ts",
 	"type": "module",
 	"files": [
-		"dist","src/cache"
+		"dist",
+		"src/cache"
 	],
 	"exports": {
 		".": {

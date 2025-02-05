@@ -78,3 +78,11 @@ useCesiumCache({
 ## License
 
 MIT
+
+
+## 待完成
+
+- 单例化
+- 自定义 key
+- 缓存过期时间
+- 完善测试demo

@@ -3,6 +3,7 @@ import useLocalStore from "./LocalStore.ts";
 export interface CacheConfig {
     dbName?: string,
     extensions?: string[],  // 需要缓存的扩展名
+    key?: string | Function,
     callback?: (_Resource: CesiumResource) => boolean  // 自定义缓存规则
 }
 
