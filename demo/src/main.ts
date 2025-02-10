@@ -2,6 +2,9 @@ import './style.css'
 import * as Cesium from 'cesium'
 import { Credit, WebMapTileServiceImageryProvider } from 'cesium'
 
+import {useCesiumCache} from '../../src/cache/Cache.ts'
+
+
 const TDT_YX = (token: string) => new WebMapTileServiceImageryProvider({
     url: `http://{s}.tianditu.gov.cn/img_w/wmts?service=wmts&request=GetTile&version=1.0.0&LAYER=img&tileMatrixSet=w&TileMatrix={TileMatrix}&TileRow={TileRow}&TileCol={TileCol}&style=default&format=tiles&tk=${ token }`,
     layer: 'img',
@@ -42,13 +45,15 @@ const init = async () => {
 
     viewer.imageryLayers.addImageryProvider(TDT_YX('012dcb4d2ede55a5e37bd5b34f6aca40'))
 
-    const tileSet = await Cesium.Cesium3DTileset.fromUrl('http://10.126.126.3:5173/gateway-service//fileStatic/3dmap/yitai/tileset.json')
+    const tileSet = await Cesium.Cesium3DTileset.fromUrl('http://10.126.126.3:5173/gateway-service/fileStatic/3dmap/yitai/tileset.json')
 
     viewer.scene.primitives.add(tileSet)
 
     // console.log(tileSet)
 
     viewer.zoomTo(tileSet, new Cesium.HeadingPitchRange(-0.5, -0.5, 800))
+
+    useCesiumCache({dbName:"demo-cache"},Cesium.Resource)
 
 }
 

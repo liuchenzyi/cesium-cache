@@ -1,9 +1,11 @@
 // db.js
-import Dexie, {type EntityTable} from 'dexie';
+import Dexie, { type EntityTable } from 'dexie'
 
 interface Cache {
-    url: string;
-    value: Blob | ArrayBuffer | null;
+    // url: string;
+    value: Blob | ArrayBuffer | ImageBitmap | null;
+    key: string;
+    id?: number;
 }
 
 interface Config {
@@ -25,25 +27,25 @@ export const formatMemorySize = (size: number) => {
 }
 
 
-export default (config: Config = {dbName: 'LocalStore'}) => {
-    const {dbName = 'LocalStore'} = config;
+export default (config: Config = { dbName: 'LocalStore' }) => {
+    const { dbName = 'LocalStore' } = config
 
     const db = new Dexie(dbName) as Dexie & {
-        cache: EntityTable<Cache, 'url'>
-    };
+        cache: EntityTable<Cache, 'key'>
+    }
     db.version(1).stores({
-        cache: '++id, &url, value', // id 自动生成主键，url 唯一索引
-    });
+        cache: '++id, &key, value,&url' // id 自动生成主键，url 唯一索引
+    })
 
     // 通过 url 获取数据
-    const getCacheByUrl = async (url: string) => {
-        const {value} = await db.cache.where({url}).first() || {value: null}
+    const getCacheByKey = async (key: string) => {
+        const { value } = await db.cache.where({ key }).first() || { value: null }
         return value
     }
 
     // 将数据 存储到数据库中
-    const setCacheToLocal = async (url: string, value: Blob | ArrayBuffer) => {
-        await db.cache.put({value, url})
+    const setCacheToLocal = async (key: string, value: Blob | ArrayBuffer | ImageBitmap) => {
+        await db.cache.put({ value, key })
     }
 
     // 清除所有 缓存
@@ -68,7 +70,7 @@ export default (config: Config = {dbName: 'LocalStore'}) => {
 
     // 暴露接口
     return {
-        getCacheByUrl,
+        getCacheByKey,
         setCacheToLocal,
         clearCache,
         getCacheSize
