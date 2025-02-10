@@ -1,20 +1,8 @@
 import './style.css'
 import * as Cesium from 'cesium'
-import { Credit, WebMapTileServiceImageryProvider } from 'cesium'
 
 import {useCesiumCache} from '../../src/cache/Cache.ts'
 
-
-const TDT_YX = (token: string) => new WebMapTileServiceImageryProvider({
-    url: `http://{s}.tianditu.gov.cn/img_w/wmts?service=wmts&request=GetTile&version=1.0.0&LAYER=img&tileMatrixSet=w&TileMatrix={TileMatrix}&TileRow={TileRow}&TileCol={TileCol}&style=default&format=tiles&tk=${ token }`,
-    layer: 'img',
-    style: 'default',
-    format: 'tiles',
-    tileMatrixSetID: 'w',
-    subdomains: ['t0', 't1', 't2', 't3', 't4', 't5', 't6', 't7'],
-    credit: new Credit('天地图影像'),
-    maximumLevel: 18
-})
 
 const init = async () => {
 
@@ -42,7 +30,6 @@ const init = async () => {
     viewer.scene.skyBox.show = false
     viewer.scene.backgroundColor = new Cesium.Color(0, 0, 0, 0)
 
-    // viewer.imageryLayers.addImageryProvider(TDT_YX('012dcb4d2ede55a5e37bd5b34f6aca40'))
 
     const tileSet = await Cesium.Cesium3DTileset.fromUrl('http://10.126.126.3:5173/gateway-service/fileStatic/3dmap/yitai/tileset.json')
 
