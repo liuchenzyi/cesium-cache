@@ -5,7 +5,7 @@
 
 Cesium 缓存
 
-重写 `Cesium.Resource` 中的 `fetchBlob` 与 `fetchArrayBuffer` 方法来来覆盖原来的方法，在发送请求前 先从数据库中查找，若没有找到则发送请求，并把请求结果缓存到数据库中
+通过 重写 Cesium.Resource._Implementations.loadWithXhr 方法(此方法在 Cesium.Resource 的类型下未定义)
 
 依赖库
 
@@ -17,22 +17,22 @@ Cesium 缓存
 在使用前需要 安装 `dexie`
 
 ```bash
-npm i cesium cesium-cache
-# yarn add cesium cesium-cache
-# pnpm add cesium cesium-cache
+npm i dexie  cesium-cache
+# yarn add dexie cesium-cache
+# pnpm add dexie cesium-cache
 ```
 
 ## 使用
 
-cesium 各个项目引入方法不同，有些使用 html,有些使用 npm, 此插件默认 重写 window 下的 Cesium.Resource ，若需要修改 npm
-包方式引用 cesium 可以使用第二个参数 将 Resource 传递进去
+此插件会覆盖 Cesium.Resource._Implementations.loadWithXhr 方法，由于项目引入 cesium 的方式不同
+为解决这个问题，提供了第二个参数，用于传递 Resource 对象
 
-### 使用 html 方式引入 cesium
+### 使用 script 方式引入 cesium
 
 在 main.js 或者 app.vue 添加如下代码
 
 ```js
-import {useCesiumCache} from 'cesium-cache'
+import { useCesiumCache } from 'cesium-cache'
 
 useCesiumCache()
 ```
@@ -43,46 +43,90 @@ useCesiumCache()
 
 ```js
 import * as Cesium from 'cesium'
-import {useCesiumCache} from 'cesium-cache'
+import { useCesiumCache } from 'cesium-cache'
 
 useCesiumCache({}, Cesium.Resource)
 ```
 
 ## 配置
 
-`useCesiumCache` 方法接收两个参数 一个为缓存配置，第二个为 Resource 对象，均可不传
-**config**
+**类型定义如下：**
 
-- dbName?: string, indexDb 数据库名称 默认为 `LocalStore`
-- extensions?: string[], // 需要缓存的扩展名
-- callback?: (_Resource: CesiumResource) => boolean // 自定义缓存规则,参数为 Resource 对象，返回 true 表示缓存，false
-  表示不缓存
+```ts
+type ResponseType = 'arraybuffer' | 'blob';
 
-`callback` 的优先级更高 配置了 `callback` 后 `extensions` 的扩展名将失效
+interface CacheConfig {
+    dbName?: string;
+    key?: (
+        url: string,
+        responseType: string,
+        method: 'GET' | 'POST',
+        data: object | undefined,
+        headers: object | undefined
+    ) => string;
+    types?: Array<ResponseType>;
+}
+
+type Resource = typeof window.Cesium.Resource;
+export declare const useCesiumCache: (config?: CacheConfig, Resource?: Resource) => {
+    clear(): void;
+    getCacheSize(): Promise<string>;
+};
+```
+
+
+**缓存配置**
+
+- dbName: string, indexDb 数据库名称 默认为 `LocalStore`
+- key: function 用于缓存的键，默认为请求的 url，若返回空字符串 则不缓存该请求
+- types: 缓存的返回值 类型 默认为 ['arraybuffer','blob']
+
+**注意** key 与 types 配置项，将同时起作用，及 key 的结果不为空字符串时，且该请求返回值类型在 types 中 才会对结果进行缓存
 
 **Resource**
 
-- Resource?: Cesium.Resource 默认为 window 下的 Cesium.Resource 对象 可以不传
+- Resource: `Cesium.Resource` 默认为 window 下的 Cesium.Resource 对象 ，若 使用 npm 方式引入 cesium 则需要传递
 
 **example**
 
 ```js
-import {useCesiumCache} from 'cesium-cache'
+import { useCesiumCache } from 'cesium-cache'
 
 useCesiumCache({
-	dbName: 'cesium-cache',
-	extensions: ['.jpg', '.png'],
+    dbName: 'cesium-cache',
+    types: ['arraybuffer', 'blob'],
 })
+```
+
+## methods
+
+**clear => Promise<void>**  清除所有缓存
+
+**getCacheSize => Promise<string>** 获取已经占用的缓存大小
+
+**example**
+
+```js
+import { useCesiumCache } from 'cesium-cache'
+
+const cache = useCesiumCache({
+    dbName: 'cesium-cache',
+    types: ['arraybuffer', 'blob'],
+})
+
+cache.getCacheSize().then((size) => {
+    console.log(size)
+})
+cache.clear()
+
 ```
 
 ## License
 
 MIT
 
-
 ## 待完成
 
-- 单例化
-- 自定义 key
 - 缓存过期时间
 - 完善测试demo
+
