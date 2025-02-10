@@ -9,7 +9,8 @@
 	},
 	"dependencies": {
 		"cesium": "^1.95.0",
-		"cesium-cache": "^0.0.1"
+		"cesium-cache": "^0.0.1",
+		"dexie": "^4.0.11"
 	},
 	"devDependencies": {
 		"typescript": "~5.7.2",

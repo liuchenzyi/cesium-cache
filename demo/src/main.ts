@@ -18,7 +18,6 @@ const TDT_YX = (token: string) => new WebMapTileServiceImageryProvider({
 
 const init = async () => {
 
-    // console.log(Cesium)
     let viewer: Cesium.Viewer = new Cesium.Viewer('map', {
         // infoBox: true, // 禁用沙箱，解决控制台报错
         selectionIndicator: true, //选择指示器
@@ -43,13 +42,13 @@ const init = async () => {
     viewer.scene.skyBox.show = false
     viewer.scene.backgroundColor = new Cesium.Color(0, 0, 0, 0)
 
-    viewer.imageryLayers.addImageryProvider(TDT_YX('012dcb4d2ede55a5e37bd5b34f6aca40'))
+    // viewer.imageryLayers.addImageryProvider(TDT_YX('012dcb4d2ede55a5e37bd5b34f6aca40'))
 
     const tileSet = await Cesium.Cesium3DTileset.fromUrl('http://10.126.126.3:5173/gateway-service/fileStatic/3dmap/yitai/tileset.json')
 
     viewer.scene.primitives.add(tileSet)
 
-    // console.log(tileSet)
+    console.log(tileSet)
 
     viewer.zoomTo(tileSet, new Cesium.HeadingPitchRange(-0.5, -0.5, 800))
 

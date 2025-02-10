@@ -81,6 +81,7 @@ export const useCesiumCache = (
 
     const types = config.types || ['blob', 'arraybuffer']
 
+
     const loadWithXhr = _Resource._Implementations.loadWithXhr
     _Resource._Implementations.loadWithXhr = (
         url,
@@ -92,27 +93,26 @@ export const useCesiumCache = (
         overrideMimeType
     ) => {
         const key = config.key ? config.key(url, responseType, method, data, headers) : url // 默认以 url 作为 key 若 key 为 空字符串 不缓存
+        if (key !== '' && types.includes(responseType)) {
+            // 查询缓存
+            LocalStore.getCacheByKey(key).then((value) => {
+                if (value) {
+                    deferred.resolve(value)
+                } else {
+                    // 缓存
+                    const { resolve } = deferred
 
-        if (key !== '') {
-            if (types.includes(responseType)) {
-                // 查询缓存
-                LocalStore.getCacheByKey(key).then((value) => {
-                    if (value) {
-                        deferred.resolve(value)
-                    } else {
-                        // 缓存
-                        const { resolve } = deferred
-
-                        deferred.resolve = (data: any) => {
-                            resolve(data)
-                            if (data) {
-                                LocalStore.setCacheToLocal(key, data)
-                            }
+                    deferred.resolve = (data: any) => {
+                        resolve(data)
+                        if (data) {
+                            LocalStore.setCacheToLocal(key, data)
                         }
                     }
-                })
-                return
-            }
+                    loadWithXhr(url, responseType, method, data, headers, deferred, overrideMimeType)
+                }
+            })
+
+            return
         }
 
         return loadWithXhr(url, responseType, method, data, headers, deferred, overrideMimeType)
