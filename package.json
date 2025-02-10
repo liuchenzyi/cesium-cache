@@ -1,6 +1,6 @@
 {
 	"name": "cesium-cache",
-	"version": "0.0.1",
+	"version": "0.1.0",
 	"description": "Cesium cache plugin",
 	"main": "./dist/chche.cjs",
 	"module": "./dist/chche.js",
@@ -41,6 +41,5 @@
 		"vite": "^6.0.5",
 		"vite-plugin-dts": "^4.5.0"
 	},
-	"dependencies": {
-	}
+	"dependencies": {}
 }
