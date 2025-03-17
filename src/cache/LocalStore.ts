@@ -34,7 +34,7 @@ export default (config: Config = { dbName: 'LocalStore' }) => {
         cache: EntityTable<Cache, 'key'>
     }
     db.version(1).stores({
-        cache: '++id, &key, value,&url' // id 自动生成主键，url 唯一索引
+        cache: '++id, &key, value' // id 自动生成主键，key 唯一索引
     })
 
     // 通过 url 获取数据
@@ -56,6 +56,7 @@ export default (config: Config = { dbName: 'LocalStore' }) => {
     // 获取已经使用的缓存大小
     const getCacheSize = async () => {
         const cache = await db.cache.toArray()
+        // console.log(cache)
         const size = cache.reduce((total, item) => {
             if (item.value instanceof Blob) {
                 return total + item.value.size
@@ -65,7 +66,7 @@ export default (config: Config = { dbName: 'LocalStore' }) => {
             }
             return total
         }, 0)
-        return formatMemorySize(size)
+        return size
     }
 
     // 暴露接口

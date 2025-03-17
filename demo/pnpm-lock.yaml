@@ -12,8 +12,8 @@ importers:
         specifier: ^1.95.0
         version: 1.126.0
       cesium-cache:
-        specifier: ^0.0.1
-        version: 0.0.1(cesium@1.126.0)(dexie@4.0.11)(vite@6.1.0(@types/node@22.13.1))
+        specifier: ^0.1.0
+        version: 0.1.0(cesium@1.126.0)(dexie@4.0.11)(vite@6.1.0(@types/node@22.13.1))
       dexie:
         specifier: ^4.0.11
         version: 4.0.11
@@ -353,8 +353,8 @@ packages:
   bitmap-sdf@1.0.4:
     resolution: {integrity: sha512-1G3U4n5JE6RAiALMxu0p1XmeZkTeCwGKykzsLTCqVzfSDaN6S7fKnkIkfejogz+iwqBWc0UYAIKnKHNN7pSfDg==}
 
-  cesium-cache@0.0.1:
-    resolution: {integrity: sha512-UY+ZzL9302EAM7PoDnOw2mToD/L4H1LcdTTdRsvMU0FfEQ4QLKgRq+lvqmyr6fGqNjyz5TzQ7hK4iF6y25GksA==}
+  cesium-cache@0.1.0:
+    resolution: {integrity: sha512-7fVyiEpCE5h98QUhm7PFGT3raOS0mLPBV0Ntu0JecnarOGxnV+bD5xMmEe50G9VoSXqRZFBnPOPXjOPRdK3/TA==}
     peerDependencies:
       cesium: ^1.95.0
       dexie: ^4.0.11
@@ -848,7 +848,7 @@ snapshots:
 
   bitmap-sdf@1.0.4: {}
 
-  cesium-cache@0.0.1(cesium@1.126.0)(dexie@4.0.11)(vite@6.1.0(@types/node@22.13.1)):
+  cesium-cache@0.1.0(cesium@1.126.0)(dexie@4.0.11)(vite@6.1.0(@types/node@22.13.1)):
     dependencies:
       cesium: 1.126.0
       dexie: 4.0.11

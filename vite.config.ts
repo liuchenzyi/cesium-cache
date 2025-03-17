@@ -28,5 +28,15 @@ export default defineConfig({
             },
             input: './src/cache/Cache.ts' // 指定入口文件
         }
+    },
+    server:{
+        // 代理
+        proxy:{
+            '/map':{
+                target:'http://1.180.88.14:12309/static/',
+                changeOrigin:true,
+                // rewrite:path => path.replace(/^\/map/, '')
+        }
+    }
     }
 })
