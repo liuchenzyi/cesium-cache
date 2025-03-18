@@ -102,11 +102,11 @@ export const useCesiumCache = (
                     // 缓存
                     const { resolve } = deferred
 
-                    deferred.resolve = (data: any) => {
-                        resolve(data)
+                    deferred.resolve = async (data: any) => {
                         if (data) {
-                            LocalStore.setCacheToLocal(key, data)
+                            await LocalStore.setCacheToLocal(key, data)
                         }
+                        resolve(data)
                     }
                     loadWithXhr(url, responseType, method, data, headers, deferred, overrideMimeType)
                 }
