@@ -1,4 +1,4 @@
-import { BinaryCache } from '../utils/BinaryCache.ts'
+import { BinaryCache } from './utils/BinaryCache.ts'
 
 
 type ResponseType = 'arraybuffer' | 'blob'

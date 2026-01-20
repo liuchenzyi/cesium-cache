@@ -8,13 +8,13 @@
 	"type": "module",
 	"files": [
 		"dist",
-		"src/cache"
+		"src/"
 	],
 	"exports": {
 		".": {
-			"types": "./dist/types/cache.d.ts",
-			"import": "./dist/cache.js",
-			"require": "./dist/cache.cjs"
+			"types": "./dist/types/index.d.ts",
+			"import": "./dist/index.js",
+			"require": "./dist/index.cjs"
 		}
 	},
 	"scripts": {

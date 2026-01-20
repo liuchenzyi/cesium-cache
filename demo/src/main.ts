@@ -1,7 +1,7 @@
 import './style.css'
 import * as Cesium from 'cesium'
 
-import {useCesiumCache} from '../../src/cache/Cache.ts'
+import {useCesiumCache} from '../../src'
 
 
 const init = async () => {
