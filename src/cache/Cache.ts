@@ -1,9 +1,11 @@
-import useLocalStore from './LocalStore'
+import { BinaryCache } from '../utils/BinaryCache.ts'
+
 
 type ResponseType = 'arraybuffer' | 'blob'
 
 interface CacheConfig {
     dbName?: string
+    maxCacheSize?: number
     key?: (
         url: string,
         responseType: string,
@@ -19,7 +21,6 @@ type Resource = typeof window.Cesium.Resource
 
 // 类型定义,覆盖 Cesium.Resource._Implementations.loadWithXhr 方法  cesium 的请求基本上都是走这个方法
 
-let used = false
 
 interface CesiumResource extends Resource {
     _Implementations: {
@@ -45,25 +46,7 @@ export const useCesiumCache = (
     },
     Resource?: Resource
 ) => {
-    const { dbName = 'LocalStore' } = config
 
-
-    // 创建本地存储实例 (indexDb)
-    const LocalStore = useLocalStore({ dbName })
-
-    const result = {
-        clear() {
-            LocalStore.clearCache()
-        },
-        getCacheSize() {
-            return LocalStore.getCacheSize()
-        }
-    }
-
-    if (used) {
-        return result
-    }
-    used = true
 
     if (!Resource) {
         if (typeof window !== 'undefined' && window.Cesium && window.Cesium.Resource) {
@@ -72,10 +55,17 @@ export const useCesiumCache = (
         } else {
             // throw new Error('Resource is not defined')
             console.error('Resource is not defined Failed to enable caching')
-            return result
-
+            return
         }
     }
+
+    const cache = new BinaryCache({
+        dbName: config.dbName || 'CesiumCache',
+        storeName: 'files',
+        maxCacheSize:  config.maxCacheSize || 500 * 1024 * 1024, // 500 MB
+        enableStorageEstimate: true
+    })
+
 
     const _Resource = Resource as CesiumResource
 
@@ -94,20 +84,22 @@ export const useCesiumCache = (
     ) => {
         const key = config.key ? config.key(url, responseType, method, data, headers) : url // 默认以 url 作为 key 若 key 为 空字符串 不缓存
         if (key !== '' && types.includes(responseType)) {
-            // 查询缓存
-            LocalStore.getCacheByKey(key).then((value) => {
+            cache.get(key).then((value) => {
                 if (value) {
                     deferred.resolve(value)
                 } else {
                     // 缓存
-                    const { resolve } = deferred
+                    const { promise } = deferred
 
-                    deferred.resolve = async (data: any) => {
+                    promise.then(async (data: any) => {
                         if (data) {
-                            await LocalStore.setCacheToLocal(key, data)
+                            console.log('cache', 'put', key, data)
+                            await cache.put(key, data)
                         }
-                        resolve(data)
-                    }
+                    }, async (error) => {
+                        console.error('cache', 'put', key, error)
+                        await cache.put(key, null)
+                    })
                     loadWithXhr(url, responseType, method, data, headers, deferred, overrideMimeType)
                 }
             })
@@ -118,5 +110,12 @@ export const useCesiumCache = (
         return loadWithXhr(url, responseType, method, data, headers, deferred, overrideMimeType)
     }
 
-    return result
+    return {
+        clear() {
+            cache.clear()
+        },
+        stats() {
+            return cache.stats()
+        }
+    }
 }

@@ -19,24 +19,14 @@ export default defineConfig({
             formats: ['es', 'cjs', 'umd'] // 输出格式
         },
         rollupOptions: {
-            external: ['cesium', 'dexie'], // 将 Cesium 排除在外
+            external: ['cesium', 'idb'], // 将 Cesium 排除在外
             output: {
                 globals: {
                     cesium: 'Cesium', // 定义全局变量名
-                    dexie: 'Dexie' // 定义全局变量名
+                    dexie: 'idb' // 定义全局变量名
                 }
             },
             input: './src/cache/Cache.ts' // 指定入口文件
         }
-    },
-    server:{
-        // 代理
-        proxy:{
-            '/map':{
-                target:'http://1.180.88.14:12309/static/',
-                changeOrigin:true,
-                // rewrite:path => path.replace(/^\/map/, '')
-        }
-    }
     }
 })
